@@ -28,15 +28,15 @@ npm install @x402/solana-sdk @solana/web3.js @solana/spl-token
 ### Client Usage (Autonomous Agent)
 
 ```typescript
-import { x402Fetch } from '@x402/solana-sdk';
-import { Keypair } from '@solana/web3.js';
+import { x402Fetch } from "@x402/solana-sdk";
+import { Keypair } from "@solana/web3.js";
 
 const wallet = Keypair.fromSecretKey(yourSecretKey);
 
 // One line to enable autonomous payments!
-const response = await x402Fetch('https://api.example.com/premium-data', {
-  network: 'devnet',
-  signer: wallet
+const response = await x402Fetch("https://api.example.com/premium-data", {
+  network: "devnet",
+  signer: wallet,
 });
 
 const data = await response.json();
@@ -46,23 +46,24 @@ console.log(data); // Your premium content
 ### Server Usage (Express API)
 
 ```typescript
-import { createX402Server } from '@x402/solana-sdk';
-import express from 'express';
+import { createX402Server } from "@x402/solana-sdk";
+import express from "express";
 
 const app = express();
 const x402 = createX402Server({
-  network: 'devnet',
-  recipientAddress: 'YOUR_SOLANA_ADDRESS'
+  network: "devnet",
+  recipientAddress: "YOUR_SOLANA_ADDRESS",
 });
 
 // Require payment for premium endpoints
-app.get('/api/premium-data',
+app.get(
+  "/api/premium-data",
   x402.requirePayment({
-    amount: '0.001',  // 0.001 SOL
-    token: 'SOL'
+    amount: "0.001", // 0.001 SOL
+    token: "SOL",
   }),
   (req, res) => {
-    res.json({ data: 'Premium content unlocked!' });
+    res.json({ data: "Premium content unlocked!" });
   }
 );
 
@@ -99,9 +100,9 @@ Simple wrapper for fetch with automatic payment handling.
 
 ```typescript
 const response = await x402Fetch(url, {
-  network: 'mainnet-beta',
+  network: "mainnet-beta",
   signer: keypair,
-  autoPayment: true,  // default: true
+  autoPayment: true, // default: true
   // ... standard fetch options
 });
 ```
@@ -111,12 +112,12 @@ const response = await x402Fetch(url, {
 Advanced client for custom payment flows.
 
 ```typescript
-import { X402Client } from '@x402/solana-sdk';
+import { X402Client } from "@x402/solana-sdk";
 
 const client = new X402Client({
-  network: 'devnet',
+  network: "devnet",
   signer: wallet,
-  commitment: 'confirmed'
+  commitment: "confirmed",
 });
 
 const response = await client.fetch(url, options);
@@ -130,10 +131,10 @@ Create a server instance for payment verification.
 
 ```typescript
 const server = createX402Server({
-  network: 'mainnet-beta',
-  recipientAddress: 'YOUR_ADDRESS',
-  enableCache: true,  // Cache verified payments
-  cacheTTL: 300       // 5 minutes
+  network: "mainnet-beta",
+  recipientAddress: "YOUR_ADDRESS",
+  enableCache: true, // Cache verified payments
+  cacheTTL: 300, // 5 minutes
 });
 ```
 
@@ -142,11 +143,12 @@ const server = createX402Server({
 Express middleware for protecting endpoints.
 
 ```typescript
-app.get('/protected',
+app.get(
+  "/protected",
   server.requirePayment({
-    amount: '0.5',   // USDC amount
-    token: 'USDC',
-    memo: 'API access fee'
+    amount: "0.5", // USDC amount
+    token: "USDC",
+    memo: "API access fee",
   }),
   handler
 );
@@ -180,9 +182,9 @@ Enable AI agents to autonomously pay for API access:
 
 ```typescript
 // Agent pays for LLM inference
-const aiResponse = await x402Fetch('https://llm.api/generate', {
+const aiResponse = await x402Fetch("https://llm.api/generate", {
   signer: agentWallet,
-  network: 'mainnet-beta'
+  network: "mainnet-beta",
 });
 ```
 
@@ -191,8 +193,9 @@ const aiResponse = await x402Fetch('https://llm.api/generate', {
 Charge per request instead of monthly subscriptions:
 
 ```typescript
-app.post('/api/analytics',
-  requirePayment({ amount: '0.10', token: 'USDC' }),
+app.post(
+  "/api/analytics",
+  requirePayment({ amount: "0.10", token: "USDC" }),
   processAnalytics
 );
 ```
@@ -202,8 +205,9 @@ app.post('/api/analytics',
 Sell articles, videos, or downloads for pennies:
 
 ```typescript
-app.get('/article/:id',
-  requirePayment({ amount: '0.05', token: 'USDC' }),
+app.get(
+  "/article/:id",
+  requirePayment({ amount: "0.05", token: "USDC" }),
   serveArticle
 );
 ```
@@ -240,8 +244,8 @@ import type {
   Network,
   TokenType,
   X402ClientConfig,
-  X402ServerConfig
-} from '@x402/solana-sdk';
+  X402ServerConfig,
+} from "@x402/solana-sdk";
 ```
 
 ## Browser Support
@@ -249,29 +253,29 @@ import type {
 Works with browser wallet adapters (Phantom, Solflare, etc.):
 
 ```typescript
-import { X402Client } from '@x402/solana-sdk';
+import { X402Client } from "@x402/solana-sdk";
 
 const client = new X402Client({
-  network: 'mainnet-beta',
+  network: "mainnet-beta",
   signer: {
     publicKey: wallet.publicKey,
-    signTransaction: (tx) => wallet.signTransaction(tx)
-  }
+    signTransaction: (tx) => wallet.signTransaction(tx),
+  },
 });
 ```
 
 ## Error Handling
 
 ```typescript
-import { PaymentRequiredError, TransactionFailedError } from '@x402/solana-sdk';
+import { PaymentRequiredError, TransactionFailedError } from "@x402/solana-sdk";
 
 try {
   const response = await x402Fetch(url, config);
 } catch (error) {
   if (error instanceof PaymentRequiredError) {
-    console.log('Payment needed:', error.paymentRequirements);
+    console.log("Payment needed:", error.paymentRequirements);
   } else if (error instanceof TransactionFailedError) {
-    console.log('Transaction failed:', error.message);
+    console.log("Transaction failed:", error.message);
   }
 }
 ```
@@ -317,10 +321,6 @@ Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidel
 - [ ] Rust SDK
 - [ ] React hooks library
 
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
 ## Hackathon Submission
 
 This SDK is submitted for the **Solana x402 Hackathon** in the "Best x402 Dev Tool" category.
@@ -343,10 +343,38 @@ This SDK is submitted for the **Solana x402 Hackathon** in the "Best x402 Dev To
 ## Support
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/x402-solana-sdk/issues)
-- **Discord**: [Join our community](https://discord.gg/x402)
-- **Email**: support@x402-sdk.com
+- **Discord**: [Chat with Dev ](https://discord.com/channels/@0xdevair)
+- **Email**: okechiemmanuel23@gmail.com
 
----
+## How to Run the Hackathon Demo
+
+Follow these simple steps to run the official x402 + Solana demo used for the hackathon.
+
+### 1. Clone and install
+
+git clone https://github.com/thenameisdevair/x402-solana-sdk.git
+cd x402-solana-sdk
+npm install
+
+### 2. Run the example server and client
+
+Start the included example server on Solana devnet, and then run the demo client that interacts with it.
+
+# Terminal 1: start the server
+
+npx tsx examples/server-api.ts
+
+# Terminal 2: run the client agent
+
+npx tsx examples/client-agent.ts
+
+### 3. Verify on Solana devnet
+
+When the client runs successfully, it will log a Solana transaction signature in the terminal. Copy that signature and paste it into a Solana devnet explorer (for example, explorer.solana.com with the network set to devnet) to verify the on-chain payment.
+
+## License
+
+## MIT License - see [LICENSE](LICENSE) file for details.
 
 Built with ❤️ for the Solana x402 Hackathon
 
